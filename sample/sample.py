@@ -27,8 +27,8 @@ class people:
 
 @app.web
 @app.cli
-def index(name=None, surname=None, greeting="Hello"):
-    return "Hello"
+def index():
+    return "Welcome"
 
 
 @app.cli
