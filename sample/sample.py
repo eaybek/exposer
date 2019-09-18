@@ -18,17 +18,19 @@ class people:
     def greetings(
         name=None, surname=None, greeting="Hello"
     ):
-        return "{}, {} {}".format(
-            greeting,
-            name.capitalize(),
-            surname.capitalize(),
+        print(
+            "{}, {} {}".format(
+                greeting,
+                name.capitalize(),
+                surname.capitalize(),
+            )
         )
 
 
 @app.web
 @app.cli
 def index():
-    return "Welcome"
+    print("Welcome")
 
 
 @app.cli
