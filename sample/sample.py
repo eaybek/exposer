@@ -3,7 +3,7 @@ from exposer.actions import PathAction
 from exposer.targets import Wsgi
 from exposer.actions import CliAction
 from exposer.targets import Cli
-from gunicornapp import RunApp
+from wsgiref.simple_server import make_server
 
 
 class app(object):
@@ -37,7 +37,20 @@ def index():
 def run():
     APP = app.web.expose()
     app.web.rename("/index", "/")
-    RunApp(APP)
+    httpd = make_server("localhost", 8051, APP)
+    import threading
+
+    t = threading.Thread(None, httpd.serve_forever)
+    t.start()
+    import time
+
+    while True:
+        try:
+            time.sleep(2)
+        except KeyboardInterrupt as ki:
+            httpd.shutdown()
+            t.join()
+            break
 
 
 app.cli.expose()

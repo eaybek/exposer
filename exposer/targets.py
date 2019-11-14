@@ -34,7 +34,22 @@ class Cli(object):
                 result = self.actions[self.argv[1]](
                     *self.args, **self.kwargs
                 )
-            return result
+                return result
+
+
+class Tee(io.StringIO):
+    def __init__(
+        self, target=sys.__stdout__, *args, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.target = target
+
+    def read(self, *args, **kwargs):
+        super().read(self, *args, **kwargs)
+
+    def write(self, *args, **kwargs):
+        print(*args, **kwargs, file=self.target, end="")
+        super().write(*args, **kwargs)
 
 
 class Wsgi(object):
@@ -52,8 +67,8 @@ class Wsgi(object):
 
             result = ""
             action_input = io.StringIO()
-            action_output = io.StringIO()
-            action_error = io.StringIO()
+            action_output = Tee()
+            action_error = Tee()
             if environ["PATH_INFO"] in self.actions.keys():
                 self.args = []
                 self.kwargs = {}
